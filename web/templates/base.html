@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>
+        {% block title %}
+            果洞标记
+        {% endblock %}
+    </title>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script>
+        $(function () {
+            'use strict';
+            var sidebar = $('#sidebar'),
+                sidebar_trigger = $('#sidebar-trigger'),
+                mask = $('.mask'),
+                back_to_top = $('.back-to-top');
+
+            function show_sidebar() {
+                mask.fadeIn();
+                sidebar.css({'right': '0'});
+            }
+
+            function hide_sidebar() {
+                mask.fadeOut();
+                sidebar.css({'right': -sidebar.width()});
+            }
+
+            function back() {
+                $('html,body').animate({
+                    'scrollTop': '0'
+                }, 800);
+            }
+
+            sidebar_trigger.on('click', show_sidebar);
+            mask.on('click', hide_sidebar);
+            back_to_top.on('click', back);
+            $(window).on('scroll', function () {
+                if ($(window).scrollTop() > 0) {
+                    back_to_top.css({
+                        'display': 'block'
+                    });
+                } else {
+                    back_to_top.fadeOut();
+                }
+            });
+            $(window).trigger('scroll');
+        });
+    </script>
+
+    <style>
+    #footer {
+        height: 25px;
+        line-height: 25px;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        background: rgb(239, 239, 239);
+        color: #000000;
+        font-size: 12px;
+        letter-spacing: 1px;
+        z-index:9999;
+    }
+    .backtop {
+        font-size: 50px;
+        color: rgb(100,130,104)
+    }
+    @media screen and (max-width: 500px) {
+        .backtop {
+            font-size: 30px;
+        }
+    }
+    </style>
+
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{% url 'home:index' %}" style="color: #001400">果洞标记</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <form class="navbar-form navbar-left">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="输入关键字">
+        </div>
+        <button type="submit" class="btn btn-default">提 交</button>
+      </form>
+        {# 判断是否登录 #}
+        {% if request.user.is_authenticated %}
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">果盘</a></li>
+        <li class="dropdown">
+          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+              <i class="glyphicon glyphicon-user"></i>{{ request.user }}
+              <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">个人中心</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">退出登录</a></li>
+          </ul>
+        </li>
+      </ul>
+        {% else %}
+        <ul class="nav navbar-nav navbar-right">
+        <li><a href="{% url 'users:register' %}">注册</a></li>
+        <li class="active"><a href="{% url 'users:login' %}">登录</a></li>
+      </ul>
+        {% endif %}
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container -->
+</nav>
+<div style="padding-top:70px">
+
+{% block content %}
+    {% block tail %}
+    <b style="position: fixed;bottom: 5%;right: 2%;" title="返回顶部" class="back-to-top">
+        <i class="glyphicon glyphicon-chevron-up backtop"></i>
+    </b>
+    {% endblock %}
+{% endblock %}
+
+<div id="footer">Copyright©2020 huangsv </div>
+
+</body>
+</html>
